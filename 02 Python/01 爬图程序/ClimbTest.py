@@ -1,6 +1,7 @@
 # encoding:utf-8
 import re  # 使用正则 匹配想要的数据
 import requests  # 使用requests得到网页源码
+import xlwt
 
 # 得到主函数传入的链接
 def getHtmlText(url):
@@ -43,14 +44,29 @@ def parsePage(ilt, html):
 
 # 得到主函数传入的列表
 def printGoodsList(ilt):
-    # 每个列之间用tplt的放是隔开
-    tplt = '{:4}\t{:8}\t{:16}\t{:32}'
-    # 这个是整个的标题
-    print(tplt.format('序号', '价格', '商品名称','地址', '图片地址'))
     count = 0 # 统计有多少的序号
+    book = xlwt.Workbook(encoding='utf-8', style_compression=0)  # style_compression:表示是否压缩，不常用。
+    sheet = book.add_sheet('test', cell_overwrite_ok=True)
+
+    sheet.write(0, 0, '序号')
+    sheet.write(0, 1, '价格')
+    sheet.write(0, 2, '商品名称')
+    sheet.write(0, 3, '付款人数')
+    sheet.write(0, 4, '地址')
+    sheet.write(0, 5, '图片地址')
+
     for g in ilt:
         count = count + 1  # 循环一遍加一
-        print(tplt.format(count, g[0], g[1], g[2]), g[3], g[4])  # 输出你得到的数据
+        num = count
+        #print(tplt.format(count, g[0], g[1], g[2]), g[3], g[4])  # 输出你得到的数据
+        sheet.write(count, 0, num)
+        sheet.write(count, 1, g[0])
+        sheet.write(count, 2, g[1])
+        sheet.write(count, 3, g[2])
+        sheet.write(count, 4, g[3])
+        sheet.write(count, 5, g[4])
+
+    book.save(r'F:\test1.xls')  # 在字符串前加r，声明为raw字符串，这样就不会处理其中的转义了。否则，可能会报错
 
 # 定义主函数 main
 def main():
